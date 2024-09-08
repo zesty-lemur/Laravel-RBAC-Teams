@@ -791,23 +791,14 @@ class User extends Authenticatable implements MustVerifyEmail
 +            get: fn (string $value) => Crypt::decryptString($value),
 +        );
 +    }
-+
-+    /**
-+     * Encrypt / decrypt the email attribute.
-+     * 
-+     * @return Illuminate\Database\Eloquent\Casts\Attribute
-+     */
-+    protected function email(): Attribute
-+    {
-+        return Attribute::make(
-+            set: fn (string $value) => Crypt::encryptString($value),
-+            get: fn (string $value) => Crypt::decryptString($value),
-+        );
-+    }
 	...
 ```
 
 These [Accessors and Mutators](https://laravel.com/docs/11.x/eloquent-mutators#accessors-and-mutators) automatically handle the encryption and decryption of sensitive assets (in this case, the user's name and email address). Similar Accessors and Mutators (known in some other languages as 'Getters' and 'Setters') will be defined in other models throughout the project.
+
+Note that the email attribute isn't encrypted. Laravel's default login feature attempts to match the user-provided email string to one in the Users table; if the latter is encrypted, the only way to do this is to have the login-logic retrieve and decrypt all email addresses, comparing each one to that provided by the user.
+
+An alternative would be to use Usernames to log in, however this would add more complexity to the application and isn't required for this example.
 
 By default, Laravel uses [AES-256-CBC](https://docs.anchormydata.com/docs/what-is-aes-256-cbc) encryption, however it is possible to set a different encryption algorithm by publishing the `vendor\laravel\framework\src\Illuminate\Encryption\Encrypter.php` file. The supported ciphers are: AES-128-CBC, AES-256-CBC, AES-128-GCM, and AES-256-GCM.
 
