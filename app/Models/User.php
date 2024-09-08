@@ -84,19 +84,6 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
-    /**
-     * Encrypt / decrypt the email attribute.
-     *
-     * @return Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    protected function email(): Attribute
-    {
-        return Attribute::make(
-            set: fn (string $value) => Crypt::encryptString($value),
-            get: fn (string $value) => Crypt::decryptString($value),
-        );
-    }
-
      /**
      * Get the teams that the user belongs to.
      *
